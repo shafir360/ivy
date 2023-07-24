@@ -220,3 +220,35 @@ def test_paddle_standard_normal(
         shape=shape,
         dtype=dtype[0],
     )
+
+@handle_frontend_test(
+    fn_tree="paddle.normal",
+    input_dtypes=st.sampled_from([["int32"], ["int64"]]),
+    shape=helpers.get_shape(
+        min_num_dims=2,
+        min_dim_size=1,
+    ),
+    mean = helpers.floats(min_value=0.0),
+    std = helpers.floats(min_value=0.0),
+)
+
+def test_paddle_normal(
+    input_dtypes,
+    mean,
+    std,
+    shape,
+    frontend,
+    test_flags,
+    fn_tree,
+):
+    #mean , std = mean_std
+    helpers.test_frontend_function(
+        input_dtypes=input_dtypes,
+        frontend=frontend,
+        test_flags=test_flags,
+        fn_tree=fn_tree,
+        test_values=False,
+        mean = mean,
+        std = std,
+        shape=shape,
+    )
